@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 16px;
+      padding-bottom: 80px;
+      margin: 0;
+      background: #ffffff;
+    }
+    
+    h2 {
+      margin: 0 0 16px 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: #000000;
+    }
+    
+    .section-input {
+      background: #f5f5f5;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    
+    .input-row {
+      margin-bottom: 16px;
+    }
+    
+    .input-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      color: #333333;
+      margin-bottom: 8px;
+    }
+    
+    .input-with-buttons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .dimension-options {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    
+    .dimension-btn {
+      padding: 8px 10px;
+      font-size: 10px;
+      border: 1px solid #e5e5e5;
+      border-radius: 4px;
+      background: #ffffff;
+      color: #666666;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 500;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .dimension-btn:hover {
+      background: #f5f5f5;
+    }
+    
+    .dimension-btn.selected {
+      background: #0d99ff;
+      color: white;
+      border-color: #0d99ff;
+    }
+    
+    .dimension-icon-rect {
+      width: 14px;
+      height: 10px;
+      border: 1.5px solid #666666;
+      border-radius: 1px;
+    }
+    
+    .dimension-btn.selected .dimension-icon-rect {
+      border-color: white;
+    }
+    
+    .dimension-icon-line {
+      width: 18px;
+      height: 2px;
+      background: #666666;
+      border-radius: 1px;
+    }
+    
+    .dimension-btn.selected .dimension-icon-line {
+      background: white;
+    }
+    
+    input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #e5e5e5;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: inherit;
+    }
+    
+    input[type="color"] {
+      width: 100%;
+      height: 32px;
+      border: 1px solid #e5e5e5;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .color-options {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      overflow-x: auto;
+      padding: 4px;
+    }
+    
+    .color-options::-webkit-scrollbar {
+      height: 6px;
+    }
+    
+    .color-options::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 3px;
+    }
+    
+    .color-options::-webkit-scrollbar-thumb {
+      background: transparent;
+      border-radius: 3px;
+      transition: background 0.2s;
+    }
+    
+    .color-options.scrolling::-webkit-scrollbar-track {
+      background: #f5f5f5;
+    }
+    
+    .color-options.scrolling::-webkit-scrollbar-thumb {
+      background: #cccccc;
+    }
+    
+    .color-options::-webkit-scrollbar-thumb:hover {
+      background: #999999;
+    }
+    
+    .color-option {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      border: 2px solid #e5e5e5;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+    }
+    
+    .color-option:hover {
+      border-color: #999999;
+    }
+    
+    .color-option.selected {
+      border-color: #0d99ff;
+      border-width: 3px;
+      box-shadow: 0 0 0 2px rgba(13, 153, 255, 0.2);
+      transform: scale(1.05);
+    }
+    
+    .color-option-custom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      line-height: 1;
+      color: #666666;
+      background: #f5f5f5;
+    }
+    
+    .custom-color-picker {
+      display: none;
+      margin-top: 8px;
+    }
+    
+    .custom-color-picker.active {
+      display: block;
+    }
+    
+    .button-group {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px;
+      background: #ffffff;
+      border-top: 1px solid #e5e5e5;
+      display: flex;
+      gap: 8px;
+    }
+    
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    
+    .btn-primary {
+      background: #0d99ff;
+      color: white;
+      width: 100%;
+    }
+    
+    .btn-primary:hover {
+      background: #0088ee;
+    }
+    
+    .btn-secondary {
+      background: #f5f5f5;
+      color: #333333;
+    }
+    
+    .btn-secondary:hover {
+      background: #e5e5e5;
+    }
+    
+    .add-section-btn {
+      width: 100%;
+      margin-bottom: 16px;
+      background: #ffffff;
+      border: 1px dashed #cccccc;
+      color: #333333;
+    }
+    
+    .add-section-btn:hover {
+      background: #f5f5f5;
+      border-color: #999999;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #000000;
+    }
+    
+    .remove-btn {
+      background: transparent;
+      color: #999999;
+      padding: 4px 8px;
+      font-size: 10px;
+      border-radius: 4px;
+      border: 1px solid #e5e5e5;
+      cursor: pointer;
+    }
+    
+    .remove-btn:hover {
+      background: #f5f5f5;
+      color: #666666;
+    }
+    
+    .sections-container {
+      max-height: 600px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Create Sections</h2>
+  
+  <div class="sections-container" id="sectionsContainer">
+    <!-- Section inputs will be added here dynamically -->
+  </div>
+  
+  <button class="add-section-btn" id="addSectionBtn">+ Add Section</button>
+  
+  <div class="button-group">
+    <button class="btn-primary" id="createBtn">Create</button>
+  </div>
+
+  <script>
+    let sectionCount = 0;
+    const sectionsContainer = document.getElementById('sectionsContainer');
+    const addSectionBtn = document.getElementById('addSectionBtn');
+    const createBtn = document.getElementById('createBtn');
+    
+    // Function to add a new section input
+    function addSection(name = '', colorData = { color: '#FFFFFF', opacity: 0.1 }) {
+      sectionCount++;
+      const sectionDiv = document.createElement('div');
+      sectionDiv.className = 'section-input';
+      sectionDiv.dataset.id = sectionCount;
+      
+      sectionDiv.innerHTML = `
+        <div class="input-row">
+          <label>Section Name</label>
+          <div class="input-with-buttons">
+            <input type="text" class="section-name">
+            <div class="dimension-options">
+              <button class="dimension-btn selected" data-width="3000" data-height="1000" title="3000×1000">
+                <div class="dimension-icon-rect"></div>
+              </button>
+              <button class="dimension-btn" data-width="6500" data-height="40" title="6500×40">
+                <div class="dimension-icon-line"></div>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="input-row">
+          <label>Background Color</label>
+          <div class="color-options">
+            <div class="color-option selected" data-color="#FFFFFF" data-opacity="0.1" style="background-color: rgba(255, 255, 255, 0.1); border: 2px solid #e5e5e5;" title="White 10%"></div>
+            <div class="color-option" data-color="#000000" data-opacity="0.05" style="background-color: rgba(0, 0, 0, 0.05); border: 2px solid #e5e5e5;" title="Black 5%"></div>
+            <div class="color-option" data-color="#5564f1" data-opacity="0.05" style="background-color: rgba(85, 100, 241, 0.05); border: 2px solid #e5e5e5;" title="Blue 5%"></div>
+            <div class="color-option" data-color="#5564f1" data-opacity="1" style="background-color: rgb(85, 100, 241); border: 2px solid #e5e5e5;" title="Blue 100%"></div>
+            <div class="color-option" data-color="#2372B8" data-opacity="1" style="background-color: rgb(35, 114, 184); border: 2px solid #e5e5e5;" title="Blue 100%"></div>
+            <div class="color-option" data-color="#EBB000" data-opacity="1" style="background-color: rgb(235, 176, 0); border: 2px solid #e5e5e5;" title="Yellow 100%"></div>
+            <div class="color-option" data-color="#D41E27" data-opacity="1" style="background-color: rgb(212, 30, 39); border: 2px solid #e5e5e5;" title="Red 100%"></div>
+            <div class="color-option" data-color="#3C7B29" data-opacity="1" style="background-color: rgb(60, 123, 41); border: 2px solid #e5e5e5;" title="Green 100%"></div>
+            <div class="color-option" data-color="#A9216A" data-opacity="1" style="background-color: rgb(169, 33, 106); border: 2px solid #e5e5e5;" title="Pink 100%"></div>
+            <div class="color-option" data-color="#5A5A5A" data-opacity="1" style="background-color: rgb(90, 90, 90); border: 2px solid #e5e5e5;" title="Gray 100%"></div>
+            <div class="color-option color-option-custom" title="Custom">+</div>
+          </div>
+          <div class="custom-color-picker">
+            <input type="color" class="section-color-custom" value="#FFFFFF">
+            <label style="margin-top: 4px;">Opacity: <span class="opacity-value">100</span>%</label>
+            <input type="range" class="section-opacity" min="0" max="100" value="100" style="width: 100%;">
+          </div>
+        </div>
+        ${sectionCount > 1 ? '<div style="text-align: right; margin-top: 8px;"><button class="remove-btn" onclick="removeSection(' + sectionCount + ')">Remove</button></div>' : ''}
+      `;
+      
+      sectionsContainer.appendChild(sectionDiv);
+      
+      // Add event listeners for dimension buttons
+      const dimensionBtns = sectionDiv.querySelectorAll('.dimension-btn');
+      dimensionBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          dimensionBtns.forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+        });
+      });
+      
+      // Add event listeners for color options
+      const colorOptions = sectionDiv.querySelectorAll('.color-option');
+      const customPicker = sectionDiv.querySelector('.custom-color-picker');
+      const customColorInput = sectionDiv.querySelector('.section-color-custom');
+      const opacityInput = sectionDiv.querySelector('.section-opacity');
+      const opacityValue = sectionDiv.querySelector('.opacity-value');
+      
+      colorOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          colorOptions.forEach(opt => opt.classList.remove('selected'));
+          this.classList.add('selected');
+          
+          if (this.classList.contains('color-option-custom')) {
+            customPicker.classList.add('active');
+          } else {
+            customPicker.classList.remove('active');
+          }
+        });
+      });
+      
+      opacityInput.addEventListener('input', function() {
+        opacityValue.textContent = this.value;
+      });
+      
+      // Add scroll event listener for color options to show scrollbar
+      const colorOptionsContainer = sectionDiv.querySelector('.color-options');
+      let scrollTimeout;
+      colorOptionsContainer.addEventListener('scroll', function() {
+        this.classList.add('scrolling');
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          this.classList.remove('scrolling');
+        }, 1000);
+      });
+    }
+    
+    // Function to remove a section
+    window.removeSection = function(id) {
+      const section = document.querySelector(`[data-id="${id}"]`);
+      if (section) {
+        section.remove();
+      }
+    };
+    
+    // Add initial 2 sections
+    addSection();
+    addSection();
+    
+    // Add section button
+    addSectionBtn.onclick = () => {
+      addSection();
+      sectionsContainer.scrollTop = sectionsContainer.scrollHeight;
+    };
+    
+    // Create button
+    createBtn.onclick = () => {
+      const sectionInputs = document.querySelectorAll('.section-input');
+      const sections = [];
+      
+      sectionInputs.forEach(input => {
+        const name = input.querySelector('.section-name').value || 'Untitled Section';
+        const selectedOption = input.querySelector('.color-option.selected');
+        const selectedDimension = input.querySelector('.dimension-btn.selected');
+        
+        let color, opacity;
+        
+        if (selectedOption.classList.contains('color-option-custom')) {
+          // Custom color
+          color = input.querySelector('.section-color-custom').value;
+          opacity = parseInt(input.querySelector('.section-opacity').value) / 100;
+        } else {
+          // Preset color
+          color = selectedOption.dataset.color;
+          opacity = parseFloat(selectedOption.dataset.opacity);
+        }
+        
+        const width = parseInt(selectedDimension.dataset.width);
+        const height = parseInt(selectedDimension.dataset.height);
+        
+        sections.push({ name, color, opacity, width, height });
+      });
+      
+      if (sections.length === 0) {
+        alert('Please add at least one section');
+        return;
+      }
+      
+      parent.postMessage({ 
+        pluginMessage: { 
+          type: 'create-sections', 
+          sections: sections 
+        } 
+      }, '*');
+    };
+  </script>
+</body>
+</html>
